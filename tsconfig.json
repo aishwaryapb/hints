@@ -12,8 +12,9 @@
         "moduleResolution": "node",
         "baseUrl": "./src",
         "typeRoots": ["./node_modules/@types", "./src/typings"],
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "skipLibCheck": true
     },
-    "include": ["./src/**/*"],
-    "exclude": ["./node_modules/**/*"]
+    "include": ["./src/**/*", "images.d.ts", "custom.d.ts"],
+    "exclude": ["./node_modules/*"]
 }

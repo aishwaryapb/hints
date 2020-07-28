@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+/* variables */
+
+$gradients: (blue: linear-gradient(109.2deg, rgba(107, 52, 255, 1) 16.5%, rgba(51, 159, 247, 1) 81%),
+    red: linear-gradient(181deg, rgba(249, 97, 100, 1) 0.4%, rgba(250, 126, 129, 1) 89.6%),
+    green:linear-gradient(171.8deg, rgba(5, 111, 146, 1) 13.5%, rgba(6, 57, 84, 1) 78.6%),
+    purple: linear-gradient(109.6deg, rgba(247, 108, 243, 1) 11.2%, rgba(173, 64, 254, 1) 100.2%));
+
+/* mixins */
+
+@mixin bg-color-modifiers {
+
+    @each $name,
+    $gradient in $gradients {
+        &-#{$name} {
+            background-image: $gradient;
+        }
+    }
+}
+
+/* Root level */
+
+html,
+body,
+#root,
+.container {
+    margin: 0;
+    height: 100vh;
+    color: white;
+}
+
+.container * {
+    font-family: 'Poppins', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-weight: 400;
+}
+
+.bg {
+    @include bg-color-modifiers;
+}
+
+::placeholder {
+    color: white;
+    text-align: center;
+    font-weight: 200;
+}
+
+/* Common classes */
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.h-v-center {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.float-left {
+    float: left;
+    text-align: left;
+}
+
+.float-right {
+    float: right;
+    text-align: right;
+}
+
+.vm-xs {
+    margin: 2vh 0;
+}
+
+.vm-md {
+    margin: 10vh 0;
+}
+
+.hm-xs {
+    margin: 0 1vw;
+}
+
+.font-lg {
+    font-size: 32px;
+}
+
+.font-xs {
+    font-size: 12px;
+}
+
+[class|="text-input"] {
+    border: none;
+    border-bottom: 0.5px solid rgb(255, 255, 255);
+    background-color: transparent;
+    text-align: center;
+    color: white;
+    padding-bottom: 10px;
+
+    &:focus {
+        border: none;
+        border-bottom: 0.5px solid rgb(255, 255, 255);
+        outline: none;
+    }
+
+    &:focus::placeholder {
+        color: transparent;
+    }
+}
+
+.text-input-lg {
+    width: 40vw;
+    font-size: 48px;
+    height: 8vh;
+}
+
+.text-input-md {
+    width: 30vw;
+    height: 6vh;
+    font-size: 26px;
+}
+
+.primary-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 50px;
+    color: white;
+    font-size: 24px;
+    height: 8vh;
+    width: 20vw;
+}
+
+.primary-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.icon {
+    width: 20px;
+    cursor: pointer;
+    path {
+        fill: white;
+    }
+}
+/* NavBar.tsx */
+
+.nav-bar {
+    padding: 15px;
+    height: 15vh;
+}
+
+/* App.tsx */
+
+.main {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}

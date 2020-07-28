@@ -1,9 +1,9 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import App from './components/App';
-import './styles/styles.scss';
+import ApolloProvider from './ApolloProvider';
+import './styles.scss';
 
 const ROOT = document.querySelector('#root');
 
-ReactDOM.render(<App name="" />, ROOT);
+ReactDOM.render(<ApolloProvider />, ROOT);
