@@ -1,18 +1,19 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useContext } from 'react';
 import { gql, useQuery, useSubscription } from '@apollo/client';
 
 import CONFIG from '../config';
 import NavBar from './NavBar';
 import GameContent from './Game';
-import { Game, Event } from '../types';
+import { Game, Event, SessionContextType } from '../types';
 import { getStage } from '../utils';
+import { SessionContext } from '../sessionContext';
 
 const bgColor = CONFIG.backgroundColors[Math.random() * CONFIG.backgroundColors.length | 0];
 
 const App: FunctionComponent = () => {
+    const { session } = useContext<SessionContextType>(SessionContext);
     let event: Event = "GAME_START";
     const [game, setGame] = useState<Game | undefined>();
-    const [session, setSession] = useState<string>(localStorage.getItem("session") || "")
     const { loading, data, error } = useQuery<GameData, GameVars>(
         GET_GAME,
         { variables: { gameId: session || "" } },
@@ -44,7 +45,7 @@ const App: FunctionComponent = () => {
                                 player2={player2}
                             />
                             <div className="main">
-                                <GameContent event={event} setSession={setSession} />
+                                <GameContent event={event} />
                             </div>
                         </>
                     )

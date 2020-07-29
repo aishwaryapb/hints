@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import {Player} from '../types';
+import { Player } from '../types';
 
 type Props = {
     player1: Player | undefined,

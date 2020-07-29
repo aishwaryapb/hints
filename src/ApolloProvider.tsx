@@ -3,6 +3,7 @@ import { split, HttpLink, ApolloClient, InMemoryCache, ApolloProvider } from '@a
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import App from './components/App';
+import { SessionProvider } from './sessionContext';
 
 
 const httpLink = new HttpLink({
@@ -29,13 +30,15 @@ const splitLink = split(
 );
 
 const client = new ApolloClient({
-    link: splitLink,
-    cache: new InMemoryCache()
+  link: splitLink,
+  cache: new InMemoryCache()
 });
 
 export default () => (
   <ApolloProvider client={client}>
+    <SessionProvider>
       <App />
+    </SessionProvider>
   </ApolloProvider>
 )
 

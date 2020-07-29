@@ -1,19 +1,18 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import { gql, useMutation, useSubscription } from '@apollo/client';
+import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
+import { gql, useMutation } from '@apollo/client';
 
-import { Event, Game } from '../types';
+import { Event, Game, SessionContextType } from '../types';
 import { getStage } from '../utils';
 import Copy from '../assets/icons/copy.svg';
 import CONFIG from '../config';
+import { SessionContext } from '../sessionContext';
 
 type Props = {
-    event?: Event,
-    setSession: React.Dispatch<React.SetStateAction<string>>
+    event?: Event
 }
 
-const Game: FunctionComponent<Props> = ({ event, setSession }) => {
-
-    const sessionID = localStorage.getItem("session");
+const Game: FunctionComponent<Props> = ({ event }) => {
+    const { session, setSession } = useContext<SessionContextType>(SessionContext);
     const [isCopied, setIsCopied] = useState<boolean>(false);
     const [stage, setStage] = useState<Event | undefined>(event);
     const [playerName, setName] = useState<string>("");
@@ -63,7 +62,7 @@ const Game: FunctionComponent<Props> = ({ event, setSession }) => {
     }
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(sessionID || "");
+        navigator.clipboard.writeText(session || "");
         setIsCopied(true);
         setTimeout(() => setIsCopied(false), 3000);
     }
@@ -84,7 +83,7 @@ const Game: FunctionComponent<Props> = ({ event, setSession }) => {
                 <div className="flex-col align-center">
                     <h1 className="vm-md">Waiting for the other player to join</h1>
                     <div className="flex-row h-v-center">
-                        <h3>Share this ID - {sessionID}</h3>
+                        <h3>Share this ID - {session}</h3>
                         <Copy className="icon hm-xs" onClick={handleCopy} />
                         {isCopied && <span className="font-xs">Copied!</span>}
                     </div>
