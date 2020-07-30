@@ -3,17 +3,19 @@ import { gql, useMutation } from '@apollo/client';
 
 import { Event, Game, SessionContextType } from '../types';
 import { getStage } from '../utils';
-import Copy from '../assets/icons/copy.svg';
 import CONFIG from '../config';
 import { SessionContext } from '../sessionContext';
+import JoinGame from './JoinGame';
+import Waiting from './Waiting';
+import MyTurn from './MyTurn';
 
 type Props = {
-    event?: Event
+    event?: Event,
+    gameOver?: string
 }
 
-const Game: FunctionComponent<Props> = ({ event }) => {
+const Game: FunctionComponent<Props> = ({ event, gameOver }) => {
     const { session, setSession } = useContext<SessionContextType>(SessionContext);
-    const [isCopied, setIsCopied] = useState<boolean>(false);
     const [stage, setStage] = useState<Event | undefined>(event);
     const [playerName, setName] = useState<string>("");
     const [createGame, { error: createErr }] = useMutation<{ createGame: Game }, { name: string }>(CREATE_GAME, {
@@ -61,38 +63,19 @@ const Game: FunctionComponent<Props> = ({ event }) => {
         return;
     }
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(session || "");
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 3000);
-    }
-
     switch (stage) {
         case "GAME_START":
             return <input className="text-input-lg vm-md" placeholder="Enter Name" onChange={(e) => setName(e.target.value)} onKeyUp={enterName} />;
         case "JOIN_GAME":
-            return (
-                <div className="flex-col align-center">
-                    <input className="text-input-md" placeholder="Enter game ID" onKeyUp={joinGame} />
-                    <i className="vm-md font-lg">Or</i>
-                    <button className="primary-button" onClick={() => createGame()}>Start Game</button>
-                </div>
-            )
+            return <JoinGame joinGame={joinGame} createGame={createGame} />
         case "WAITING_FOR_PLAYER":
-            return (
-                <div className="flex-col align-center">
-                    <h1 className="vm-md">Waiting for the other player to join</h1>
-                    <div className="flex-row h-v-center">
-                        <h3>Share this ID - {session}</h3>
-                        <Copy className="icon hm-xs" onClick={handleCopy} />
-                        {isCopied && <span className="font-xs">Copied!</span>}
-                    </div>
-                </div>
-            )
+            return <Waiting session={session} />
         case "MY_TURN":
-            return <h1>My turn!</h1>
+            return <MyTurn />
         case "WAITING_FOR_TURN":
-            return <h1>Guess the word!</h1>
+            return <h1 className="vm-md">Guess the word!</h1>
+        case "GAME_OVER":
+            return <h1 className="vm-md">{gameOver}</h1>;
         case "ERROR": return <h1>Something went wrong. Please try later  🙁</h1>
         default:
             return <h1>Welcome to Hints!</h1>;

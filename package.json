@@ -17,7 +17,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "subscriptions-transport-ws": "^0.9.17",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "use-sound": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",
@@ -30,6 +31,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.4.2",
     "dotenv": "^8.2.0",
+    "file-loader": "^6.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.13.1",

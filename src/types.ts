@@ -1,6 +1,6 @@
 import { SetStateAction } from 'react';
 
-export type Event = "GAME_START" | "JOIN_GAME" | "WAITING_FOR_PLAYER" | "WAITING_FOR_TURN" | "MY_TURN" | "ERROR";
+export type Event = "GAME_START" | "JOIN_GAME" | "WAITING_FOR_PLAYER" | "WAITING_FOR_TURN" | "MY_TURN" | "ERROR" | "GAME_OVER";
 
 export type Player = {
     name: string | null,

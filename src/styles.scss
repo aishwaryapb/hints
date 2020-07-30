@@ -86,6 +86,10 @@ h6 {
     text-align: right;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .vm-xs {
     margin: 2vh 0;
 }
@@ -104,6 +108,14 @@ h6 {
 
 .font-xs {
     font-size: 12px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.border-bottom {
+    border-bottom: 0.5px solid white;
 }
 
 [class|="text-input"] {
@@ -137,19 +149,32 @@ h6 {
     font-size: 26px;
 }
 
-.primary-button {
+[class|="primary-button"] {
     background-color: transparent;
     border: 1px solid white;
     border-radius: 50px;
     color: white;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background-color: white;
+        color: black;
+    }
+}
+
+.primary-button-lg {
     font-size: 24px;
     height: 8vh;
     width: 20vw;
 }
 
-.primary-button:hover {
-    background-color: white;
-    color: black;
+.primary-button-sm {
+    font-size: 14px;
+    height: 5vh;
+    width: 8vw;
 }
 
 .icon {
@@ -159,6 +184,15 @@ h6 {
         fill: white;
     }
 }
+
+.thin-text {
+    font-weight: 200;
+
+    h1, h2, h3, h4, h5, h6, p {
+        font-weight: 300;
+    }
+}
+
 /* NavBar.tsx */
 
 .nav-bar {
@@ -172,4 +206,44 @@ h6 {
     height: 100%;
     display: flex;
     justify-content: center;
+}
+
+/* MyTurn.tsx */
+
+.my-turn-container {
+    padding: 1% 10%;
+    width: 100%;
+}
+
+.question {
+    justify-content: start;
+    width: 50%;
+
+    h1 {
+        font-size: 75px;
+        margin-bottom: 5%;
+    }
+
+    h2 {
+        font-weight: 200;
+    }
+
+    ul {
+        padding-left: 1.2rem;
+
+        li {
+            font-size: 20px;
+        }
+    }
+}
+
+.timer {
+    width: 50%;
+    justify-content: start;
+    align-items: center;
+    padding-top: 6%;
+    h1 {
+        font-size: 100px;
+        font-weight: 200;
+    }
 }
