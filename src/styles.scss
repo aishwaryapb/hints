@@ -102,6 +102,10 @@ h6 {
     margin: 0 1vw;
 }
 
+.m-xs {
+    margin: 2vh 1vw;
+}
+
 .font-lg {
     font-size: 32px;
 }
@@ -192,6 +196,12 @@ h6 {
         font-weight: 300;
     }
 }
+
+.glowing {
+    color: #fff;
+    text-shadow: 0 0 3px #fff, 0 0 6px #fff;
+ }
+
 
 /* NavBar.tsx */
 

@@ -1,49 +1,86 @@
 import React, { FunctionComponent, useState, useContext } from 'react';
-import { gql, useQuery, useSubscription, useMutation } from '@apollo/client';
+import { useQuery, useSubscription, useMutation } from '@apollo/client';
 
 import CONFIG from '../config';
 import NavBar from './NavBar';
 import GameContent from './Game';
-import { Game, Event, SessionContextType } from '../types';
+import { Game, Event, SessionContextType, Player } from '../types';
 import { getStage } from '../utils';
 import { SessionContext } from '../sessionContext';
+import { GET_GAME, CURRENT_PLAYER, END_GAME, GAME_OVER } from '../graphql';
 
 const bgColor = CONFIG.backgroundColors[Math.random() * CONFIG.backgroundColors.length | 0];
 
 const App: FunctionComponent = () => {
+    // Context
     const { session } = useContext<SessionContextType>(SessionContext);
-    const [gameOver, setGameOver] = useState<string | undefined>();
-    const [game, setGame] = useState<Game | undefined>();
-    const { loading, data, error } = useQuery<GameData, GameVars>(
-        GET_GAME,
-        { variables: { gameId: session || "" } },
-    );
-    const { getGame } = data || {};
-    let event: Event = gameOver ? "GAME_OVER" : "GAME_START";
 
-    const { error: subError } = useSubscription<{ getCurrentPlayer: Game }, { gameId: string }>(CURRENT_PLAYER, {
+    // State
+    const [gameOver, setGameOver] = useState<string | undefined>();
+    const [players, setPlayers] = useState<{player1: Player, player2: Player}>();
+    const [event, setEvent] = useState<Event>("GAME_START");
+
+    // GraphQL
+    const { loading, error: getErr } = useQuery<GameData, GameVars>(
+        GET_GAME,
+        { 
+            variables: { gameId: session || "" },
+            onCompleted: (data) => {
+                if(data?.getGame) {
+                    setEvent(getStage(data.getGame));
+                    setPlayers({
+                        player1: data.getGame.player1,
+                        player2: data.getGame.player2
+                    });
+                }
+            }
+        },
+    
+    );
+
+    const { error: updateErr} = useSubscription<{ getCurrentPlayer: Game }, { gameId: string }>(CURRENT_PLAYER, {
         variables: { gameId: session || "" },
         onSubscriptionData: ({ subscriptionData }) => {
             const { data } = subscriptionData;
-            data?.getCurrentPlayer && setGame(data.getCurrentPlayer);
+            if(data?.getCurrentPlayer) {
+                setEvent(getStage(data.getCurrentPlayer));
+                setPlayers({
+                    player1: data.getCurrentPlayer.player1,
+                    player2: data.getCurrentPlayer.player2
+                });
+            }
         }
     });
 
-    const [endGame] = useMutation<{ endGame: string }, { gameId: string }>(END_GAME, {
+    useSubscription<{ endGame: {result: string} }, { gameId: string }>(GAME_OVER, {
+        variables: { gameId: session || "" },
+        onSubscriptionData: ({ subscriptionData }) => {
+            const { data } = subscriptionData;
+            if(data?.endGame.result) {
+                setEvent("GAME_OVER");
+                setGameOver(data?.endGame.result);
+            }
+            localStorage.clear();
+        }
+    });
+
+    const [endGame, {error: endErr}] = useMutation<{ endGame: string }, { gameId: string }>(END_GAME, {
         variables: {
             gameId: session
         },
         update: (_, result) => {
             const { data } = result;
-            data?.endGame && setGameOver(data.endGame);
+            if(data?.endGame) {
+                setEvent("GAME_OVER");
+                setGameOver(data.endGame);
+            }
             localStorage.clear();
         }
     });
 
-    getGame && (event = getStage(game || getGame));
-    (error || subError) && (event = "ERROR");
+    (getErr || updateErr || endErr) && setEvent("ERROR");
 
-    const { player1, player2 } = game || getGame || {};
+    const { player1, player2 } = players || {};
 
     return (
         <div className={`flex-col container ${bgColor}`}>
@@ -60,11 +97,12 @@ const App: FunctionComponent = () => {
                                 <GameContent event={event} gameOver={gameOver}/>
                             </div>
                             <div className='w-full footer'>
-                                <div className="float-left hm-xs">
+                                <div className="float-left m-xs">
                                     <h1>hints</h1>
                                     <h5>Made with &#128155; by Aishwarya</h5>
                                 </div>
-                                <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() => endGame()}>End Game</button>
+                                { (event === "WAITING_FOR_TURN" || event === "MY_TURN") && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() => endGame()}>End Game</button> }
+                                { event === "GAME_OVER" && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() =>  window.location.reload()}>Restart</button> }
                             </div>
                         </>
                     )
@@ -80,45 +118,5 @@ type GameVars = {
 type GameData = {
     getGame: Game
 }
-
-const GET_GAME = gql`
-    query getGame($gameId: String!) {
-        getGame(gameId: $gameId) {
-            id
-            player1 {
-                name
-                score
-            }
-            player2 {
-                name
-                score
-            }
-            currentPlayer
-        }
-    }
-`;
-
-const CURRENT_PLAYER = gql`
-  subscription getCurrentPlayer($gameId: String!) {
-    getCurrentPlayer(gameId: $gameId) {
-        id
-        player1 {
-            name
-            score
-        }
-        player2 {
-            name
-            score
-        }
-        currentPlayer
-    }
-  }
-`;
-
-const END_GAME = gql`
-    mutation endGame($gameId: String!) {
-        endGame(gameId: $gameId) 
-    }
-`;
 
 export default App;

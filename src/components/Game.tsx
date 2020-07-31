@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect, useContext } from 'react';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { Event, Game, SessionContextType } from '../types';
 import { getStage } from '../utils';
@@ -8,6 +8,7 @@ import { SessionContext } from '../sessionContext';
 import JoinGame from './JoinGame';
 import Waiting from './Waiting';
 import MyTurn from './MyTurn';
+import { CREATE_GAME, UPDATE_GAME } from '../graphql';
 
 type Props = {
     event?: Event,
@@ -81,39 +82,5 @@ const Game: FunctionComponent<Props> = ({ event, gameOver }) => {
             return <h1>Welcome to Hints!</h1>;
     }
 }
-
-const CREATE_GAME = gql`
-    mutation createGame($name: String!) {
-        createGame(name: $name) {
-            id
-            player1 {
-                name
-                score
-            }
-            player2 {
-                name
-                score
-            }
-            currentPlayer
-        }
-    }
-`;
-
-const UPDATE_GAME = gql`
-    mutation updateGame($name: String!, $gameId: String!) {
-        updateGame(name: $name, gameId: $gameId) {
-            id
-            player1 {
-                name
-                score
-            }
-            player2 {
-                name
-                score
-            }
-            currentPlayer
-        }
-    }
-`;
 
 export default Game;

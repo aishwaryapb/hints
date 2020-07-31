@@ -1,14 +1,16 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {useMutation, gql} from '@apollo/client';
+import {useMutation} from '@apollo/client';
 
 import { getTime } from '../utils';
 import ding from '../assets/sounds/ding.mp3';
 import useSound from 'use-sound';
 import {Game} from '../types';
+import { UPDATE_SCORE } from '../graphql';
+import CONFIG from '../config';
 
 const MyTurn:FunctionComponent = () => {
     const [play] = useSound(ding);
-    const [time, setTime] = useState<number>(2);
+    const [time, setTime] = useState<number>(CONFIG.timer);
     const [showAction, toggleShowAction] = useState<boolean>(false);
 
     useEffect(() => {
@@ -61,22 +63,5 @@ const MyTurn:FunctionComponent = () => {
         </div>
     )
 }
-
-const UPDATE_SCORE = gql`
-    mutation updateScore($correctGuess: Boolean!, $gameId: String!) {
-        updateScore(correctGuess: $correctGuess, gameId: $gameId) {
-            id
-            player1 {
-                name
-                score
-            }
-            player2 {
-                name
-                score
-            }
-            currentPlayer
-        }
-    }   
-`;
 
 export default MyTurn;
