@@ -7,6 +7,13 @@ $gradients: (blue: linear-gradient(109.2deg, rgba(107, 52, 255, 1) 16.5%, rgba(5
     green:linear-gradient(171.8deg, rgba(5, 111, 146, 1) 13.5%, rgba(6, 57, 84, 1) 78.6%),
     purple: linear-gradient(109.6deg, rgba(247, 108, 243, 1) 11.2%, rgba(173, 64, 254, 1) 100.2%));
 
+$tablet: 768px;
+$iPadPro: 1024px;
+$laptop: 1280px;
+$mobileL: 450px;
+$mobileM: 360px;
+$mobileS: 320px;
+
 /* mixins */
 
 @mixin bg-color-modifiers {
@@ -28,6 +35,7 @@ body,
     margin: 0;
     height: 100vh;
     color: white;
+    overflow-y: auto;
 }
 
 .container * {
@@ -184,6 +192,7 @@ h6 {
 .icon {
     width: 20px;
     cursor: pointer;
+
     path {
         fill: white;
     }
@@ -192,7 +201,13 @@ h6 {
 .thin-text {
     font-weight: 200;
 
-    h1, h2, h3, h4, h5, h6, p {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
         font-weight: 300;
     }
 }
@@ -200,7 +215,7 @@ h6 {
 .glowing {
     color: #fff;
     text-shadow: 0 0 3px #fff, 0 0 6px #fff;
- }
+}
 
 
 /* NavBar.tsx */
@@ -252,8 +267,222 @@ h6 {
     justify-content: start;
     align-items: center;
     padding-top: 6%;
+
     h1 {
         font-size: 100px;
         font-weight: 200;
+    }
+}
+
+/* Media queries */
+
+@media only screen and (min-width: $tablet) and (max-width: 1023px) {
+    .nav-bar {
+        height: 10vh;
+    }
+
+    .text-input-lg,
+    .text-input-md {
+        width: 45vw;
+        height: 6vh;
+        font-size: 40px;
+    }
+
+    .primary-button-lg {
+        font-size: 30px;
+        height: 8vh;
+        width: 40vw;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .float-left {
+            margin: 2vh 3vw;
+        }
+
+        button {
+            font-size: 18px;
+            height: 5vh;
+            width: 20vw;
+            margin: 2vh 3vw;
+        }
+    }
+
+    .my-turn-container {
+        margin-top: 10vh;
+
+        h1 {
+            font-size: 50px;
+        }
+
+        .timer {
+
+            .vm-md {
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 60px;
+            }
+
+            button {
+                font-size: 24px;
+                height: 4vh;
+                width: 15vw;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $mobileL) {
+
+    .text-input-lg,
+    .text-input-md {
+        width: 80vw;
+        font-size: 36px;
+    }
+
+    .text-input-md {
+        font-size: 30px;
+    }
+
+    .primary-button-lg {
+        font-size: 18px;
+        height: 8vh;
+        width: 50vw;
+    }
+
+    .waiting-container h1 {
+        text-align: center;
+    }
+
+    .share-id-container {
+        flex-direction: column;
+        padding: 0 10vw;
+
+        svg {
+            margin: 2vh 1vw;
+        }
+
+        .icon {
+            width: 30px;
+        }
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .float-left {
+            margin: 2vh 3vw;
+        }
+
+        button {
+            font-size: 14px;
+            height: 5vh;
+            width: 30vw;
+            margin: 2vh 3vw;
+        }
+    }
+
+    .my-turn-container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        .question,
+        .timer {
+            width: 100%;
+        }
+
+        .timer {
+            margin-top: 4vh;
+
+            h2 {
+                margin: 0;
+            }
+        }
+
+        h1 {
+            font-size: 45px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        button {
+            width: 25vw;
+        }
+    }
+}
+
+@media only screen and (max-width: $mobileS) {
+
+    .my-turn-container {
+        h1 {
+            font-size: 32px;
+            margin-bottom: 0;
+        }
+
+        h2,
+        li {
+            font-size: 28px;
+        }
+    }
+
+    .timer {
+        margin-top: 0 !important;
+    }
+}
+
+@media only screen and (min-width: $iPadPro) and (max-width: 1030px) {
+    .nav-bar {
+        height: 6vh;
+    }
+
+    .primary-button-lg {
+        font-size: 24px;
+        height: 5vh;
+        width: 30vw;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .float-left {
+            margin: 2vh 3vw;
+        }
+
+        button {
+            font-size: 20px;
+            height: 5vh;
+            width: 18vw;
+            margin: 2vh 3vw;
+        }
+    }
+
+    .my-turn-container {
+        margin-top: 10vh;
+
+        .timer {
+            .vm-md {
+                margin: 0;
+            }
+
+            button {
+                font-size: 24px;
+                height: 4vh;
+                width: 15vw;
+            }
+        }
     }
 }
