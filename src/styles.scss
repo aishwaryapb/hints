@@ -237,6 +237,16 @@ h6 {
     justify-content: center;
 }
 
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    button {
+        margin: 2vh 1vw;
+    }
+}
+
 /* MyTurn.tsx */
 
 .my-turn-container {
