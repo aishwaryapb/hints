@@ -55,7 +55,7 @@ module.exports = {
                 use: ['@svgr/webpack'],
             },
             {
-                test: /\.mp3$/,
+                test: /\.(png|jpg|gif|mp3)$/,
                 loader: 'file-loader'
             }
         ]
@@ -63,7 +63,8 @@ module.exports = {
     devtool: "source-map",
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'public', 'index.html')
+            template: path.resolve(__dirname, 'public', 'index.html'),
+            favicon: path.resolve(__dirname, 'public', 'favicon.ico')
         }),
         new webpack.DefinePlugin(envKeys)
     ]

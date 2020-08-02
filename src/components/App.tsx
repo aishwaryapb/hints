@@ -8,6 +8,7 @@ import { Game, Event, SessionContextType, Player } from '../types';
 import { getStage } from '../utils';
 import { SessionContext } from '../sessionContext';
 import { GET_GAME, CURRENT_PLAYER, END_GAME, GAME_OVER } from '../graphql';
+import Loader from '../assets/gifs/loader.gif';
 
 const bgColor = CONFIG.backgroundColors[Math.random() * CONFIG.backgroundColors.length | 0];
 
@@ -17,16 +18,16 @@ const App: FunctionComponent = () => {
 
     // State
     const [gameOver, setGameOver] = useState<string | undefined>();
-    const [players, setPlayers] = useState<{player1: Player, player2: Player}>();
+    const [players, setPlayers] = useState<{ player1: Player, player2: Player }>();
     const [event, setEvent] = useState<Event>("GAME_START");
 
     // GraphQL
     const { loading, error: getErr } = useQuery<GameData, GameVars>(
         GET_GAME,
-        { 
+        {
             variables: { gameId: session || "" },
             onCompleted: (data) => {
-                if(data?.getGame) {
+                if (data?.getGame) {
                     setEvent(getStage(data.getGame));
                     setPlayers({
                         player1: data.getGame.player1,
@@ -35,14 +36,14 @@ const App: FunctionComponent = () => {
                 }
             }
         },
-    
+
     );
 
-    const { error: updateErr} = useSubscription<{ getCurrentPlayer: Game }, { gameId: string }>(CURRENT_PLAYER, {
+    const { error: updateErr } = useSubscription<{ getCurrentPlayer: Game }, { gameId: string }>(CURRENT_PLAYER, {
         variables: { gameId: session || "" },
         onSubscriptionData: ({ subscriptionData }) => {
             const { data } = subscriptionData;
-            if(data?.getCurrentPlayer) {
+            if (data?.getCurrentPlayer) {
                 setEvent(getStage(data.getCurrentPlayer));
                 setPlayers({
                     player1: data.getCurrentPlayer.player1,
@@ -52,11 +53,11 @@ const App: FunctionComponent = () => {
         }
     });
 
-    useSubscription<{ endGame: {result: string} }, { gameId: string }>(GAME_OVER, {
+    useSubscription<{ endGame: { result: string } }, { gameId: string }>(GAME_OVER, {
         variables: { gameId: session || "" },
         onSubscriptionData: ({ subscriptionData }) => {
             const { data } = subscriptionData;
-            if(data?.endGame.result) {
+            if (data?.endGame.result) {
                 setEvent("GAME_OVER");
                 setGameOver(data?.endGame.result);
             }
@@ -64,13 +65,13 @@ const App: FunctionComponent = () => {
         }
     });
 
-    const [endGame, {error: endErr}] = useMutation<{ endGame: string }, { gameId: string }>(END_GAME, {
+    const [endGame, { error: endErr }] = useMutation<{ endGame: string }, { gameId: string }>(END_GAME, {
         variables: {
             gameId: session
         },
         update: (_, result) => {
             const { data } = result;
-            if(data?.endGame) {
+            if (data?.endGame) {
                 setEvent("GAME_OVER");
                 setGameOver(data.endGame);
             }
@@ -86,7 +87,11 @@ const App: FunctionComponent = () => {
         <div className={`flex-col container ${bgColor}`}>
             {
                 loading
-                    ? <h1>Loading...</h1>
+                    ? (
+                        <div className="flex-row w-full h-full h-v-center">
+                            <img src={Loader} width={100} alt="loader" />
+                        </div>
+                    )
                     : (
                         <>
                             <NavBar
@@ -94,15 +99,15 @@ const App: FunctionComponent = () => {
                                 player2={player2}
                             />
                             <div className="main">
-                                <GameContent event={event} gameOver={gameOver}/>
+                                <GameContent event={event} gameOver={gameOver} />
                             </div>
                             <div className='w-full footer'>
                                 <div className="float-left m-xs">
                                     <h1>hints</h1>
                                     <h5>Made with &#128155; by Aishwarya</h5>
                                 </div>
-                                { (event === "WAITING_FOR_TURN" || event === "MY_TURN") && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() => endGame()}>End Game</button> }
-                                { event === "GAME_OVER" && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() =>  window.location.reload()}>Restart</button> }
+                                {(event === "WAITING_FOR_TURN" || event === "MY_TURN") && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() => endGame()}>End Game</button>}
+                                {event === "GAME_OVER" && <button className="primary-button-sm float-right end-game-btn hm-xs text-center" onClick={() => window.location.reload()}>Restart</button>}
                             </div>
                         </>
                     )
