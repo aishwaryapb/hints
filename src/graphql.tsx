@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const GET_GAME = gql`
     query getGame($gameId: String!) {
@@ -97,4 +97,14 @@ export const UPDATE_SCORE = gql`
             currentPlayer
         }
     }   
+`;
+
+export const GET_RANDOM_QUESTION = gql`
+    query {
+        getQuestion {
+            id
+            word
+            taboo
+        }
+    }
 `;
