@@ -19,7 +19,7 @@ const Game: FunctionComponent<Props> = ({ event, gameOver }) => {
     const { session, setSession } = useContext<SessionContextType>(SessionContext);
     const [stage, setStage] = useState<Event | undefined>(event);
     const [playerName, setName] = useState<string>("");
-    const [createGame, { error: createErr }] = useMutation<{ createGame: Game }, { name: string }>(CREATE_GAME, {
+    const [createGame] = useMutation<{ createGame: Game }, { name: string }>(CREATE_GAME, {
         variables: { name: playerName },
         update: (_, result) => {
             const { data } = result;
@@ -27,23 +27,22 @@ const Game: FunctionComponent<Props> = ({ event, gameOver }) => {
             localStorage.setItem("session", data?.createGame.id || "");
             localStorage.setItem("pnum", CONFIG.player1.toString());
             data?.createGame && setStage(getStage(data.createGame));
-        }
+        },
+        onError: () => setStage("ERROR")
     });
-    const [updateGame, { error: updateErr }] = useMutation<{ updateGame: Game }, { name: string, gameId: string }>(UPDATE_GAME, {
-        update: (_, result) => {
-            const { data } = result;
+    const [updateGame] = useMutation<{ updateGame: Game }, { name: string, gameId: string }>(UPDATE_GAME, {
+        update: (_, { data }) => {
             data?.updateGame.id && setSession(data?.updateGame.id);
             localStorage.setItem("session", data?.updateGame.id || "");
             localStorage.setItem("pnum", CONFIG.player2.toString());
             data?.updateGame && setStage(getStage(data.updateGame));
-        }
+        },
+        onError: () => setStage("ERROR")
     });
 
     useEffect(() => {
         setStage(event)
     }, [event])
-
-    if (createErr || updateErr) setStage("ERROR");
 
     const enterName = (e: any) => {
         const { key, target: { value } } = e;
